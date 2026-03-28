@@ -3,20 +3,19 @@ export default async function handler(req, res) {
 
   const prompt = `Give a short, clear meaning and cultural origin of the first name "${name}".`;
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }]
-    })
-  });
+  const response = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + process.env.GEMINI_API_KEY,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    }
+  );
 
   const data = await response.json();
-  const answer = data.choices[0].message.content;
+  const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
 
   res.status(200).json({ result: answer });
 }
