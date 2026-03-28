@@ -19,14 +19,11 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    const answer =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response from Gemini";
-
-    res.status(200).json({ result: answer });
+    // TEMP: return the raw response so we can debug
+    return res.status(200).json({ raw: data });
 
   } catch (error) {
     console.error("Server error:", error);
-    res.status(500).json({ error: "Server crashed" });
+    res.status(500).json({ error: error.toString() });
   }
 }
