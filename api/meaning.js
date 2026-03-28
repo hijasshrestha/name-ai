@@ -1,7 +1,19 @@
 export default async function handler(req, res) {
   try {
-    // Parse body manually (Vercel does NOT auto-parse)
-    const body = req.body ? req.body : JSON.parse(await req.text());
+    // Handle body parsing safely for all runtimes
+    let body = {};
+
+    if (req.body) {
+      body = req.body;
+    } else {
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      const raw = Buffer.concat(chunks).toString();
+      body = JSON.parse(raw || "{}");
+    }
+
     const { name } = body;
 
     const prompt = `Give a short, clear meaning and cultural origin of the first name "${name}".`;
