@@ -1,6 +1,8 @@
 export default async function handler(req, res) {
   try {
-    const { name } = req.body;
+    // Parse body manually (Vercel does NOT auto-parse)
+    const body = req.body ? req.body : JSON.parse(await req.text());
+    const { name } = body;
 
     const prompt = `Give a short, clear meaning and cultural origin of the first name "${name}".`;
 
@@ -19,8 +21,11 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // TEMP: return the raw response so we can debug
-    return res.status(200).json({ raw: data });
+    const answer =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No response from Gemini";
+
+    res.status(200).json({ result: answer });
 
   } catch (error) {
     console.error("Server error:", error);
