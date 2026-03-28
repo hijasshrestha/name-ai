@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Name Meaning AI</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 40px auto; }
+    input { width: 100%; padding: 10px; margin-top: 10px; }
+    button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
+    #result { margin-top: 20px; background: #f3f3f3; padding: 15px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>AI Name Meaning</h1>
+
+  <input id="name" placeholder="Enter a name">
+  <button onclick="getMeaning()">Get Meaning</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function getMeaning() {
+      const name = document.getElementById("name").value;
+      document.getElementById("result").innerText = "Thinking...";
+
+      const response = await fetch("/api/meaning", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+      });
+
+      const data = await response.json();
+      document.getElementById("result").innerText = data.result;
+    }
+  </script>
+</body>
+</html>
