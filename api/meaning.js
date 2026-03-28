@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const prompt = `Give a short, clear meaning and cultural origin of the first name "${name}".`;
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=" + process.env.GEMINI_API_KEY,
+      "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" + process.env.GEMINI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,6 +32,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     console.log("RAW GEMINI RESPONSE:", data);
+
     const answer =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "No response from Gemini";
